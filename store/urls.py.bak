@@ -1,0 +1,15 @@
+from django.urls import path
+from . import views
+
+urlpatterns = [
+	path('', views.list),
+	path('aggregation', views.aggregation),
+	path('annotate', views.annotate),
+	#path('listcustom', views.listcustom),
+	path('connection', views.connection),
+	path('contactus', views.contactus, name='contactus'),
+	path('product/<int:id>', views.product_detail),
+	path('product_list', views.product_list),
+	path('category_list', views.category_list),
+	path('product_category', views.product_category_list)
+]
