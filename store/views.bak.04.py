@@ -1,7 +1,6 @@
 #from django.db import connection
 from django.http import HttpResponse
 from django.db.models import Count,Sum,Min,Max,F
-from rest_framework.generics import ListCreateAPIView
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
@@ -39,13 +38,8 @@ class CategoryDetail(APIView):
         category.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-# class ProductList(ListCreateAPIView):
-#     queryset=Product.objects.select_related('category').order_by('-inventory')
-#     serializer_class=ProductSerializer
-#     def get_serializer_context(self):
-#         return {'request',self.request}
 
-#class ProductDetail(RetrieveUpdateDestroyAPIView):
+
 
 
 # X visualizzare o creare un nuovo prodotto

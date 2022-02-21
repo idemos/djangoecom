@@ -1,52 +1,27 @@
 #from django.db import connection
 from django.http import HttpResponse
 from django.db.models import Count,Sum,Min,Max,F
-from rest_framework.generics import ListCreateAPIView
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.views import APIView
 from .models import Product,Category
 from .serializers import CategorySerializer,ProductSerializer,ProductCategorySerializer
 from django.shortcuts import render,get_object_or_404
 
-class CategoryList(APIView):
-    def get(self,request):
+
+@api_view(['GET','POST'])
+def category_list(request):
+    if request.method == 'GET':
         category = Category.objects.annotate(products_count=Count('products')).all()
         #category = Category.objects.all()
         serializer = CategorySerializer(category, many=True)
         return Response(serializer.data)
-    def post(self,request):
+    elif request.method == 'POST':
         serializer=CategorySerializer(data=request.data)
         # controlla la validazione sul model
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
-
-class CategoryDetail(APIView):
-    def get(self,request,id):
-        category = get_object_or_404(Category,pk=id)
-        serializer=CategorySerializer(category)
-        return Response(serializer.data)
-    def post(self,request,id):
-        category = get_object_or_404(Category,pk=id)
-        serializer=CategorySerializer(category, data=request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(serializer.data)
-    def delete(self,request,id):
-        category = get_object_or_404(Category,pk=id)
-        category.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
-
-# class ProductList(ListCreateAPIView):
-#     queryset=Product.objects.select_related('category').order_by('-inventory')
-#     serializer_class=ProductSerializer
-#     def get_serializer_context(self):
-#         return {'request',self.request}
-
-#class ProductDetail(RetrieveUpdateDestroyAPIView):
-
 
 # X visualizzare o creare un nuovo prodotto
 @api_view(['GET','POST'])
