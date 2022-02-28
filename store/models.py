@@ -1,4 +1,10 @@
+from pickle import TRUE
 from django.db import models
+from uuid import uuid4
+
+
+
+
 
 # Create your models Category.
 class Category(models.Model):
@@ -90,3 +96,24 @@ class OrderItem(models.Model):
     unit_price = models.DecimalField(max_digits=6, decimal_places=2)
     created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+class Review(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='reviews')
+    name=models.CharField(max_length=255)
+    description=models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+
+class Cart(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid4)
+    created_at = models.DateTimeField(auto_now_add=True, null=False)
+
+
+class CartItem(models.Model):
+    cart = models.ForeignKey(Cart, on_delete=models.CASCADE, null=True, related_name='cartitems')
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, null=True, related_name='cartitemproducts')
+    quantity = models.PositiveSmallIntegerField()
+    created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+    updated_at = models.DateTimeField(null=True, auto_now=True)
+    class Meta:
+        unique_together = [['cart','product']]
+

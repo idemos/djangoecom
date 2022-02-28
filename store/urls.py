@@ -1,14 +1,17 @@
-from django.urls import path
+from django.urls import path,include
 from . import views
+from rest_framework_nested import routers
+from pprint import pprint
 
-urlpatterns = [
-	path('category/<int:id>', views.CategoryDetail.as_view()),
-	path('category', views.CategoryList.as_view()),
-	path('product/<int:id>', views.product_detail),
-	path('product', views.product_list),
-	#path('product', views.ProductList.as_view()),
-	#path('product/<int:id>', views.ProductDetail.as_view()),
-	path('product_category/<int:id>', views.product_category_detail),
-	path('product_category', views.product_category_list),
-	#path('category_product', views.category_product_list),
-]
+
+router = routers.DefaultRouter()
+router.register('carts', views.CartViewSet)
+router.register('product', views.ProductViewSet, basename='product')
+router.register('category', views.CategoryViewSet)
+
+#pprint(router.urls)
+products_router = routers.NestedDefaultRouter(router, 'product', lookup='product')
+products_router.register('review',views.ReviewViewSet, basename='product-review')
+
+urlpatterns = router.urls + products_router.urls
+

@@ -1,5 +1,4 @@
 from decimal import Decimal
-from pprint import pprint
 from rest_framework import serializers
 from .models import CartItem, Category, Product, Review, Cart
 
@@ -7,12 +6,7 @@ from .models import CartItem, Category, Product, Review, Cart
 class ReviewSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = Review
-		fields = ['id','name','description']
-	
-	# sovrascrive il method create
-	def create(self, validated_data):
-		product_id =  self.context['product_id']
-		return Review.objects.create(product_id=product_id,**validated_data)
+		fields = ['id','name','description','created_at','product']
 
 class CategorySerializer(serializers.HyperlinkedModelSerializer):
 	class Meta:
